@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>French Vocabulary Practice</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .app {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        #englishWord {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            font-size: 18px;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            outline: none;
+            text-align: center;
+        }
+
+        input:focus {
+            border-color: #555;
+        }
+
+        #message {
+            height: 24px;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .correct {
+            color: green;
+        }
+
+        .incorrect {
+            color: red;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+    <h1>French Vocabulary</h1>
+
+    <div id="englishWord"></div>
+
+    <input
+        id="answer"
+        type="text"
+        placeholder="Enter the French word"
+        autocomplete="off"
+        autofocus
+    >
+
+    <div id="message"></div>
+</div>
+
+<script>
+    // --------------------------------------------------
+    // EDIT YOUR VOCABULARY HERE
+    // --------------------------------------------------
+
+    const glossary = [
+        { english: "house", french: "maison" },
+        { english: "dog", french: "chien" },
+        { english: "cat", french: "chat" },
+        { english: "book", french: "livre" },
+        { english: "water", french: "eau" },
+        { english: "apple", french: "pomme" },
+        { english: "car", french: "voiture" },
+        { english: "school", french: "école" },
+        { english: "friend", french: "ami" },
+        { english: "food", french: "nourriture" }
+    ];
+
+    // --------------------------------------------------
+
+    const englishWordElement = document.getElementById("englishWord");
+    const answerInput = document.getElementById("answer");
+    const messageElement = document.getElementById("message");
+
+    let currentWord = null;
+    let previousWord = null;
+
+    function getRandomWord() {
+        // If there is only one word, simply return it.
+        if (glossary.length === 1) {
+            return glossary[0];
+        }
+
+        let word;
+
+        // Avoid showing the same word twice in a row.
+        do {
+            const randomIndex = Math.floor(Math.random() * glossary.length);
+            word = glossary[randomIndex];
+        } while (word === previousWord);
+
+        return word;
+    }
+
+    function showNewWord() {
+        currentWord = getRandomWord();
+        previousWord = currentWord;
+
+        englishWordElement.textContent = currentWord.english;
+
+        answerInput.value = "";
+        answerInput.focus();
+
+        messageElement.textContent = "";
+        messageElement.className = "";
+    }
+
+    function normalize(text) {
+        return text
+            .trim()
+            .toLowerCase();
+    }
+
+    function checkAnswer() {
+        const userAnswer = normalize(answerInput.value);
+        const correctAnswer = normalize(currentWord.french);
+
+        if (userAnswer === correctAnswer) {
+            messageElement.textContent = "Correct!";
+            messageElement.className = "correct";
+
+            // Briefly show "Correct!" before moving on.
+            setTimeout(showNewWord, 400);
+        }
+    }
+
+    answerInput.addEventListener("input", checkAnswer);
+
+    // Start the app.
+    if (glossary.length > 0) {
+        showNewWord();
+    } else {
+        englishWordElement.textContent = "The glossary is empty.";
+        answerInput.disabled = true;
+    }
+</script>
+
+</body>
+</html>
